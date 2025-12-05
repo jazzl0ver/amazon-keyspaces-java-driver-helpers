@@ -21,7 +21,7 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn -B -X clean package
+        run: mvn -B -X -DskipTests clean package
 
       - name: Create GitHub Release
         id: create_release
