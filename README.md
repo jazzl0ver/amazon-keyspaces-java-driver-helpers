@@ -21,6 +21,12 @@ The following code shows how to include the  AmazonKeyspacesRetryPolicy to exist
 ## Throttling / RateLimiting
 Retries maintain level of availability when receiving short burst of traffic, acute failure, or loss of connection, but sustained retries can further destabilize systems resulting in cascading failure. If you are using retries to limit traffic then you may want to consider a rate limiter.  As reties continue to occur at a steady rate they increasingly add to the overall traffic sent to the database.  When facing this scenario you should introduce rate-limiting. Rate limiters provide what is known as back pressure. You can achieve this by leveraging the Java Driver's Throttler Extension point.  There are a few rate-limiters provided native with the driver, but in this repository we will provide some sample limiters that are designed for Amazon Keyspaces serverless capacity and service quotas. 
 
+### AmazonKeyspacesAimdThrottler (experimental)
+
+An opt-in adaptive concurrency limiter using additive increase / multiplicative decrease (AIMD). It reacts to terminal Keyspaces timeouts and gradually raises the number of simultaneous in-flight requests on successful completions. Unlike fixed rate limiting, it controls concurrency rather than requests/second and cannot guarantee the absence of physical-partition throttling.
+
+See [AIMD configuration and limitations](docs/AIMD.md) for DSBulk examples, tuning parameters, and testing guidance.
+
 ### AmazonKeyspacesFixedRateThrottler
 This is a request throttler that limits the rate of requests per second. It can be used to match the current table provisioned rate if you have predictable or average capacity per request.
 The limit is configurable through the client driver configuration. 
